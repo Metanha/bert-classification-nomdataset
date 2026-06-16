@@ -11,12 +11,12 @@ class SentimentDataset(Dataset):
         self.tokenizer = AutoTokenizer.from_pretrained(name_or_model_path)
 
         self.data = pd.read_csv(csv_file, encoding="latin-1")
-        self.data = data.copy()
+        self.data = self.data.copy()
         self.data["Sentiment"] = self.data["Sentiment"].str.replace("Extremely ", "", regex=False)
-        self.data = self.data[["OriginalTweet", "sentiment"]]
+        self.data = self.data[["OriginalTweet", "Sentiment"]]
 
         self.labels_dict = dict()
-        for indx, l in enumerate(self.data.sentiment.unique()):
+        for indx, l in enumerate(self.data["Sentiment"].unique()):
             self.labels_dict[l] = indx
 
     def __len__(self):
@@ -24,8 +24,8 @@ class SentimentDataset(Dataset):
 
     def __getitem__(self, idx):
 
-        text  = self.data["text"][idx]
-        label = self.data["sentiment"][idx]
+        text  = self.data["OriginalTweet"][idx]
+        label = self.data["Sentiment"][idx]
 
         
         ids = self.tokenizer(
@@ -49,7 +49,7 @@ class SentimentDataset(Dataset):
 if __name__ == "__main__":
 
     dataset = SentimentDataset(
-        csv_file           = "train.csv",
+        csv_file           = "data/Corona_NLP_train.csv",
         name_or_model_path = "google-bert/bert-base-uncased"
     )
 
