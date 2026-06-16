@@ -13,7 +13,7 @@ data["Sentiment"]=data["Sentiment"].str.replace("Extremely ", "", regex=False)
 MODEL_PATH         = "checkpoints/best_model.pth"
 MODEL_NAME         = "google-bert/bert-base-uncased"
 MAX_LENGTH         = 128
-LABELS             = {0: "Positive", 1: "Negative", 2: "Neutral"}
+LABELS             = {0: "Neutral", 1: "Positive", 2: "Negative"}
 
 
 # ════════════════════════════════════════════
