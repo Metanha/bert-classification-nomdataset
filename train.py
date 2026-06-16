@@ -4,7 +4,7 @@ from torch.utils.data import Subset
 from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
-from tqdm import tqdm  # Suivi visuel de l'entraînement
+from tqdm import tqdm  
 
 from dataset import SentimentDataset
 from model import SentimentModel
