@@ -45,48 +45,43 @@ LABELS     = {0: "Positive", 1: "Negative", 2: "Neutral"}
 # Device
 # ════════════════════════════════════════════
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"✅ Device : {device}")
+print(f"Device : {device}")
 
 
 # ════════════════════════════════════════════
 # Tokenizer
 # ════════════════════════════════════════════
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-print(f"✅ Tokenizer chargé")
+print(f"Tokenizer chargé")
 
 
-# ════════════════════════════════════════════
-# Modèle — Chargement correct
-# ════════════════════════════════════════════
 
-# ✅ Étape 1 — Recréer l'architecture
+
 model = SentimentModel(
     model_name_or_path = MODEL_NAME,
     n_class            = len(LABELS)
 )
 
-# ✅ Étape 2 — Charger le state_dict
+
 state_dict = torch.load(
     MODEL_PATH,
     map_location = device
 )
 
-# ✅ Étape 3 — Injecter les poids
+
 model.load_state_dict(state_dict, strict=True)
 
-# ✅ Étape 4 — Device + Mode évaluation
+
 model = model.to(device)
 model.eval()
-print(f"✅ Modèle chargé depuis {MODEL_PATH}")
+print(f"Modèle chargé depuis {MODEL_PATH}")
 
 
-# ════════════════════════════════════════════
-# Fonction de Prédiction
-# ════════════════════════════════════════════
+
 def predict(text):
 
     if not text.strip():
-        return "⚠️ Veuillez entrer un texte", {}
+        return " Veuillez entrer un texte", {}
 
     ids = tokenizer(
         text,
@@ -113,13 +108,10 @@ def predict(text):
     return pred_label, result
 
 
-# ════════════════════════════════════════════
-# Interface Gradio
-# ════════════════════════════════════════════
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
     gr.Markdown("""
-    # 🤖 Sentiment Analysis avec BERT
+
     **Fine-tuning de BERT pour la classification de sentiments**
     Entrez un texte en anglais et le modèle prédit son sentiment :
     **Positif**, **Négatif** ou **Neutre**
@@ -140,7 +132,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
         with gr.Column():
             label_output = gr.Label(
-                label = "🎯 Classe Prédite"
+                label = "Classe Prédite"
             )
             probs_output = gr.Label(
                 label           = "📊 Probabilités par Classe",
@@ -150,7 +142,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Examples(
         examples = data.head()["OriginalTweet"].tolist(),
         inputs   = text_input,
-        label    = "💡 Exemples pré-remplis"
+        label    = "Exemples pré-remplis"
     )
 
     submit_btn.click(
@@ -159,9 +151,5 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
         outputs = [label_output, probs_output]
     )
 
-
-# ════════════════════════════════════════════
-# LANCEMENT
-# ════════════════════════════════════════════
 if __name__ == "__main__":
     demo.launch(share=True)
