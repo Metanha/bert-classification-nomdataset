@@ -19,7 +19,8 @@ class SentimentModel(nn.Module):
 
  
         outputs = self.pretrained(
-            input_ids      = input_ids
+            input_ids= input_ids,
+            attention_mask= attention_mask
         )
 
         cls_output = outputs.last_hidden_state[:, 0, :]
